@@ -5,7 +5,8 @@ $(function(){
 		var user = $("#userName").val();
 		displayDaysLeft(user);
 	});
-
+    
+    // fetching the date on which user name was created
 	var displayDaysLeft = function(user) {
 		user = $("#userName").val();
 		var userUrl = "http://www.reddit.com/user/" + user + "/about.json?jsonp=?";
@@ -16,14 +17,15 @@ $(function(){
 			$('#result').text(daysLeft);
 		});
 	};
-
+	
+	//caluclating days left to the next reddit anniversary/birthday
 	var caluclateDaysLeft = function(createdDate) {
 		var currentYear = moment().format('YYYY');
-		var nextCakeday = createdDate.year(currentYear);
+		var nextBday = createdDate.year(currentYear);
 
-		if(nextCakeday < moment()){
-			nextCakeday = nextCakeday.add('years', 1)
+		if(nextBday < moment()){
+			nextBday = nextBday.add('years', 1)
 		}
-		return nextCakeday.diff(moment(), 'days');
+		return nextBday.diff(moment(), 'days');
 	};
 });
