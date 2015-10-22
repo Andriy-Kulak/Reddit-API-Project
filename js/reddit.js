@@ -1,7 +1,10 @@
 $(function(){
 
 	"use strict";
-
+	/**
+	 * Jquery elements
+	 * @type {*|jQuery|HTMLElement}
+	 */
 	var $result = $('#result');
 	var $message = $('#message');
 	var $form = $('#cakeday-form');
@@ -9,7 +12,7 @@ $(function(){
 	var $userNameInput = $('#user-name-input');
 
 	/**
-	 * requires person to enter user info
+	 * Requires person to enter user info
 	 */
 	var noInput = function(){
 		emptyAllElements();
@@ -17,17 +20,21 @@ $(function(){
 		$($message).addClass('colored-background');
 	};
 
+	/**
+	 * Results displayed using Ajax displaying
+	 * @param userName
+	 */
 	var gotInput = function(userName) {
 		var userUrl = createUserUrl(userName);
 		/**
-		 * If it takes more than a second to load, response will default to: not found
+		 * If it takes more than a second to load, response will default to error: not found
 		 */
 		$.ajax({
 			url: userUrl,
 			dataType: "jsonp",
 			timeout: 1000,
 			success: function(data){
-
+				//using moment plugin to make a manageable date
 				var createdDate = moment.unix(data.data.created);
 				var nextCakeday = calculateNextCakeday(createdDate);
 
@@ -41,6 +48,7 @@ $(function(){
 				$($message).after('<img src="css/img/sadpanda.png" id="panda" />')
 			}});
 	};
+
 	/**
 	 * Calculating days left until next b-day
 	 * @param createdDate
@@ -66,11 +74,18 @@ $(function(){
 		displayDaysLeft(daysLeft);
 		displayMessage(daysLeft);
 	}
-
+	/**
+	 * Next Reddit Birthday date
+	 * @param nextCakeday
+	 */
 	var displayNextCakeday = function(nextCakeday) {
 		$($cakedayDate).text(nextCakeday.format("MMMM Do YYYY"));
 	};
 
+	/**
+	 * Days left until next Reddit birthday
+	 * @param daysLeft
+	 */
 	var displayDaysLeft = function(daysLeft) {
 		$($result).text(daysLeft);
 	};
@@ -79,10 +94,11 @@ $(function(){
 		var message = " ";
 
 
-
 		$($message).html("days left<br />" + message);
 	};
-
+	/**
+	 * Empty elements if incorrect username is entered
+	 */
 	var emptyAllElements = function(){
 		$($cakedayDate).empty();
 		$($message).empty();
@@ -90,12 +106,19 @@ $(function(){
 		$('#panda').remove();
 		$($message).removeClass('colored-background');
 	};
-
+	/**
+	 * GET-request for the user
+	 * @param userName
+	 *
+	 */
 	var createUserUrl = function(userName){
 		return "http://www.reddit.com/user/" + userName +
 			"/about.json?jsonp=?";
 	};
 
+	/**
+	 * Upon submitting form, user will be trigger to gotInput or noInput
+	 */
 	$(document).on("submit", $form, function(event) {
 		event.preventDefault();
 		var userName = $userNameInput.val();
@@ -106,4 +129,5 @@ $(function(){
 			noInput();
 		}
 	});
+
 });
